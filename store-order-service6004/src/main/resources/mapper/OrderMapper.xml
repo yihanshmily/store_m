@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.OrderMapper">
+    <insert id="createOrder">
+        insert into t_order(id,sole,goods_id,shop_id,user_id,address_id,coupon_id,number,total_price,text)
+        values (#{id},#{sole},#{goodsId},#{shopId},#{userId},#{addressId},#{couponId},#{number},#{totalPrice},#{text})
+    </insert>
+
+    <update id="updateOrderStatus">
+        update t_order set status = #{status} where id = #{id}
+    </update>
+    <update id="putOrderOfShop">
+        update t_order set is_shop = 0 where id = #{id}
+    </update>
+    <update id="putOrderOfUser">
+        update t_order set is_user = 0 where id = #{id}
+    </update>
+    <delete id="delGoodsOfOrder">
+        delete from t_order where goods_id in (${ids})
+    </delete>
+
+    <select id="getOrdersIsShopOfShopId" resultType="com.lry.store.dto.OrderDto">
+        select o.id,goods_id,number,total_price,status,name as goodsName,img as goodsImg
+        from t_order o, t_goods g
+        where (unix_timestamp(o.create_time)  between 1577808000 and SUBSTR(${searchTime},1,10))
+          and o.goods_id = g.id and o.is_shop = 1
+          and o.shop_id = #{shopId}
+        order by o.update_time desc limit #{currentPage},4
+    </select>
+
+    <select id="getOrderById" resultType="com.lry.store.dto.OrderDto">
+        select o.sole, o.goods_id, o.number, total_price, o.create_time, status, g.name as goodsName, img as goodsImg,
+               price as goodsPrice, sale_room as goodsSaleRoom, u.name as userName, address_info as addressInfo,o.coupon_id,
+               a.name as addressName, tel as addressTel,cate.name as goodsCategory, u.sole as userSole, pay_way, o.id
+        from t_order o, t_goods g, t_user u, t_address a, t_category cate
+        where o.goods_id = g.id  and o.user_id = u.id and o.address_id = a.id and g.category_id = cate.id
+          and o.id = #{orderId}
+    </select>
+
+    <select id="getGainOfShopId" resultType="com.lry.store.dto.OrderDto">
+        select o.id, total_price, o.create_time, name as userName, img as userImg
+        from t_order o, t_user u, t_userdetail ud
+        where o.user_id = u.id and u.id = ud.user_id and o.shop_id = #{shopId}
+          and (unix_timestamp(o.create_time)  between 1577808000 and SUBSTR(${searchTime},1,10))
+        order by create_time desc limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getOrderOfSeralByUserId" resultType="com.lry.store.dto.OrderDto">
+        select o.id,goods_id,number,total_price,g.name as goodsName,img as goodsImg,s.name as shopName,
+               g.description as goodsDescription,s.id as shopId
+        from t_order o, t_goods g, t_shop s
+        where o.goods_id = g.id and is_user = 1 and g.shop_id = s.id and user_id = #{userId} and status = #{seral}
+        order by o.create_time desc
+    </select>
+    <select id="getOrderByUserId" resultType="com.lry.store.dto.OrderDto">
+        select o.id,o.sole,o.goods_id,o.shop_id,number,total_price,status,pay_way,text,g.name as goodsName,
+               img as goodsImg,price,description,s.name as shopName,address_info,a.name as addressName,
+               tel as addressTel,cg.name as categoryName,o.coupon_id,o.comment_id,o.create_time
+        from t_order o, t_goods g, t_shop s, t_address a, t_category cg
+        where o.goods_id = g.id and o.shop_id = s.id and o.address_id = a.id and  g.category_id = cg.id
+          and o.id =#{id}
+    </select>
+    <select id="getOrderCouponId" resultType="com.lry.store.domain.Coupon">
+        select c.cut_money,c.meet_money
+        from t_order o, t_coupon c
+        where o.coupon_id = c.id and o.id = #{id}
+    </select>
+    <select id="getOrderCommentId" resultType="com.lry.store.domain.Comment">
+
+    </select>
+</mapper>

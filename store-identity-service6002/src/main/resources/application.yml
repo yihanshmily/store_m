@@ -1,0 +1,39 @@
+server:
+  port: 6002
+
+spring:
+  application:
+    name: store-identity-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+#    alibaba:
+#      seata:
+#        tx-service-group: lry_group
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/store
+      username: root
+      password: renyihan21
+
+feign:
+  hystrix:
+    enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    #    开启mp的输出日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+#      配置统一的前缀
+      table-prefix: t_
+

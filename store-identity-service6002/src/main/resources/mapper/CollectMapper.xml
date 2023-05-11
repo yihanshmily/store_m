@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.CollectMapper">
+    <insert id="createCollect">
+        insert into t_collect(id,user_id,goods_id,shop_id) values (#{id},#{userId},#{goodsId},#{shopId})
+    </insert>
+    <delete id="delCollect">
+        delete from t_collect where user_id = #{userId} and goods_id = #{goodsId} and shop_id = #{shopId}
+    </delete>
+    <delete id="delAllCollect">
+        delete from t_collect where user_id = #{userId}
+    </delete>
+    <delete id="delGoodsByIds">
+        delete from t_collect where goods_id in (${ids})
+    </delete>
+
+    <select id="getUserByShopId" resultType="com.lry.store.dto.CollectDto">
+        select c.user_id as userId,u.name as userName, ud.img as userImg
+        from t_collect c,t_user u ,t_userdetail ud
+        where c.user_id = u.id and u.id = ud.user_id and c.shop_id = #{shopId}
+        order by c.create_time desc limit #{currentPage},#{pageSize}
+    </select>
+    <select id="isCollect" resultType="java.lang.Integer">
+        select count(*) from t_collect where user_id = #{userId} and goods_id = #{goodsId}
+    </select>
+    <select id="getAllGoodsOfUserId" resultType="com.lry.store.domain.Goods">
+        select g.id as id,name,img,price
+        from t_collect c, t_goods g
+        where c.goods_id = g.id and is_status = 1 and c.user_id = #{userId}
+        order by g.update_time desc
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(id) as countSum from t_collect where user_id = #{userId}
+    </select>
+</mapper>

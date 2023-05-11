@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.FootMapper">
+
+    <insert id="createFoot">
+        insert into t_foot values (#{id},#{userId},#{goodsId},#{createTime},#{updateTime})
+    </insert>
+    <delete id="deleteFootByUserId">
+        delete from t_foot
+        where user_id = #{userId}
+    </delete>
+    <delete id="delGoodsOfFoot">
+        delete from t_foot where goods_id in (${ids})
+    </delete>
+    <select id="getFootByUserId" resultType="com.lry.store.dto.FootDto">
+        select f.id, goods_id,g.name as goodsName,img as goodsImg,price as goodsPrice
+        from t_foot f,t_goods g,t_user u
+        where f.user_id = u.id and f.goods_id = g.id and u.id = #{userId}
+        order by f.updated_time
+    </select>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.CouponMapper">
+    <insert id="createCoupon">
+        insert into t_coupon(id,goods_id,shop_id,meet_money,cut_money)
+            values(#{id},#{goodsId},#{shopId},#{meetMoney},#{cutMoney})
+    </insert>
+    <insert id="addCoupon">
+        insert into t_ucoupon(id,user_id,coupon_id) values (#{id},#{userId},#{couponId})
+    </insert>
+    <update id="updateCoupon">
+        update t_coupon
+        set goods_id = #{goodsId}, meet_money = #{meetMoney}, cut_money = #{cutMoney}
+        where id = #{id}
+    </update>
+    <update id="updateGetCoupon">
+        update t_ucoupon set is_use = 1 where user_id = #{userId} and coupon_id = #{couponId}
+    </update>
+    <delete id="deleteCoupon">
+        delete from t_coupon where id = #{id}
+    </delete>
+
+    <select id="getCouponsByShopId" resultType="com.lry.store.dto.CouponDto">
+        select meet_money,cut_money
+        from t_coupon c
+        where  shop_id = #{shopId} and goods_id = #{goodsId}
+        order by create_time
+    </select>
+    <select id="getCouponByShopId" resultType="com.lry.store.dto.CouponDto">
+        select c.id,goods_id,meet_money,cut_money,c.create_time,g.name as goodsName,g.img as goodsImg
+        from t_coupon c, t_goods g
+        where c.goods_id = g.id  and c.shop_id = #{shopId};
+    </select>
+    <select id="getOne" resultType="com.lry.store.domain.Coupon">
+        select id,meet_money,cut_money,goods_id,shop_id
+        from t_coupon
+        where id = #{id}
+    </select>
+    <select id="isZero" resultType="java.lang.Integer">
+        select count(user_id)
+        from t_coupon c, t_ucoupon uc
+        where c.id = uc.coupon_id and c.id = #{couponId}
+    </select>
+    <select id="getCouponCount" resultType="com.lry.store.dto.UCouponDto">
+        select c.goods_id as goodsId,coupon_id,user_id
+        from t_coupon c, t_ucoupon uc
+        where c.id = uc.coupon_id and c.shop_id = #{shopId}
+        order by c.create_time
+    </select>
+    <select id="getUserCoupon" resultType="com.lry.store.dto.CouponDto">
+        select c.id,meet_money,cut_money,c.goods_id,g.name as goodsName,g.img as goodsImg,uc.user_id
+        from t_coupon c, t_ucoupon uc, t_goods g
+        where uc.is_use = 0 and c.id = uc.coupon_id and g.id = c.goods_id and uc.user_id = #{userId}
+        order by c.create_time
+    </select>
+    <select id="getGoodsCoupon" resultType="com.lry.store.dto.CouponDto">
+        select id,meet_money,cut_money
+        from t_coupon
+        where  goods_id = #{goodsId} and
+              id not in (select coupon_id from t_ucoupon where user_id = #{userId})
+    </select>
+    <select id="getSelGoodsCoupon" resultType="com.lry.store.dto.CouponDto">
+        select id,meet_money,cut_money
+        from t_coupon
+        where  goods_id = #{goodsId} and
+            id in (select coupon_id from t_ucoupon where is_use = 0 and user_id = #{userId})
+        order by create_time
+    </select>
+</mapper>

@@ -1,0 +1,46 @@
+server:
+  port: 6004
+
+spring:
+  application:
+    name: store-order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    alibaba:
+      seata:
+        tx-service-group: lry_group
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/store
+      username: root
+      password: renyihan21
+
+feign:
+  hystrix:
+    enabled: true
+
+#设置feign客户端超时时间
+ribbon:
+  #  建立连接所用时间
+  ReadTimeout: 5000
+  #  建立连接后从服务器读取到可用资源的时间
+  ConnectTimeout: 5000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    #    开启mp的输出日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+#      配置统一的前缀
+      table-prefix: t_
+

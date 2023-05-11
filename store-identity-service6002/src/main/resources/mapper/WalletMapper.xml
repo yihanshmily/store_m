@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.WalletMapper">
+
+    <insert id="createWallet">
+        insert into t_walletDetail(id,user_id,goods_id,money,is_add,is_dec)
+        values (#{id},#{userId},#{goodsId},#{money},#{isAdd},#{isDec})
+    </insert>
+    <update id="addWallet">
+        update t_wallet set wallet = wallet + #{money} where user_id = #{userId};
+    </update>
+    <update id="desWallet">
+        update t_wallet set wallet = wallet - #{money} where user_id = #{userId};
+    </update>
+    <delete id="deleteWallet">
+        delete from t_walletdetail where user_id = #{userId}
+    </delete>
+    <delete id="deleteWalletDetails">
+        delete from t_walletdetail where goods_id in (${ids})
+    </delete>
+    <select id="getWalletCount" resultType="com.lry.store.dto.WalletDetailDto">
+        select goods_id,money,is_add,w.create_time,g.img as goodsImg,s.name as shopName
+        from t_walletdetail w, t_goods g, t_shop s
+        where w.goods_id = g.id and g.shop_id = s.id and UNIX_TIMESTAMP(w.create_time) between #{searchTIme} and #{endTime}
+    </select>
+    <select id="getWalletOfUserId" resultType="com.lry.store.dto.WalletDetailDto">
+        select wallet from t_wallet where user_id = #{userId}
+    </select>
+</mapper>

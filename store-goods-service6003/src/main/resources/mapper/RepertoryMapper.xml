@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.RepertoryMapper">
+
+    <insert id="addRepertory">
+        insert into t_repertory (id,goods_id,shop_id,address)
+            values(#{id}, #{goodsId}, #{shopId},'成都')
+    </insert>
+
+    <update id="addRepertorySum">
+        update t_repertory set sum_total = sum_total +${addSum},number = number +${addSum}
+        where id = #{id} and shop_id = #{shopId}
+    </update>
+    <update id="desRepertory">
+        update t_repertory set number = number - #{number} where goods_id = #{goodsId}
+    </update>
+
+    <delete id="deleteById">
+        delete from t_repertory where goods_id in (${ids});
+    </delete>
+
+    <select id="getRepertory" resultType="com.lry.store.dto.RepertoryDto">
+        select r.id,goods_id,number,address,lateAdd_time,name as goodsName,img as goodsImg,
+               sale_room as goodsSaleRoom,sum_total
+        from t_goods g, t_repertory r
+        where  r.shop_id = #{shopId} and r.goods_id = g.id and goods_id in (${ids})
+        order by r.update_time desc limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="getRepertoryId" resultType="com.lry.store.dto.RepertoryDto">
+        select name as goodsName,img as goodsImg,sale_room as goodsSaleRoom,goods_id,number,
+               address,lateAdd_time,sum_total
+        from t_goods g, t_repertory r
+        where g.id = r.goods_id and r.id = #{id}
+    </select>
+    <select id="getGoodsRep" resultType="java.lang.Integer">
+        select number from t_repertory where goods_id = #{goodsId}
+    </select>
+
+</mapper>

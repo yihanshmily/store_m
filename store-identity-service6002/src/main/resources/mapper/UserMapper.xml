@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.UserMapper">
+    <update id="updateStatus">
+        update t_userDetail set is_status = !is_status where user_id = #{id}
+    </update>
+    <update id="updateInfo">
+        update t_user u, t_userDetail ud
+        set name = #{name},tel = #{tel},img = #{img},update_time = now()
+        where u.id = ud.user_id and u.id = #{id}
+    </update>
+    <update id="updatePwd">
+        update t_user
+        set pwd = #{newPwd}
+        where id = #{id} and pwd = #{oldPwd}
+    </update>
+
+    <select id="getCounts" resultType="java.lang.Integer">
+        select count(*) from t_user where name like "%"#{searchName}"%"
+    </select>
+
+    <select id="getAllByLikes" resultType="com.lry.store.domain.User">
+        select u.id,sole,name,tel,is_status,update_time
+        from t_user u , t_userdetail ud
+        where u.id = ud.user_id  and u.name like "%"#{searchName}"%"
+        order by ud.update_time desc limit #{currentPage},#{number}
+    </select>
+
+    <select id="getOnlyInfoById" resultType="com.lry.store.domain.User">
+        select u.id,sole,name,tel,img,is_status,create_time,update_time
+        from t_user u , t_userdetail ud
+        where u.id = #{id} and u.id = ud.user_id;
+    </select>
+    <select id="getImg" resultType="java.lang.String">
+        select img
+        from t_user u , t_userdetail ud
+        where u.id = ud.user_id and (u.name = #{news} or u.sole = #{news})
+    </select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.GoodsMapper">
+
+    <insert id="addGoods">
+        insert into t_goods (id,shop_id,name,img,price,description,create_time,category_id)
+        values (#{id},#{shopId},#{name},#{img},#{price},#{description},#{createTime},#{categoryId})
+    </insert>
+
+    <update id="updateGoods">
+        update t_goods
+        set name=#{name},category_id=#{categoryId},price=#{price},img=#{img},description=#{description},update_time=now()
+        where id=#{id}
+    </update>
+    <update id="updateGoodsSaleRoom">
+        update t_goods set sale_room = sale_room + #{saleRoom} where id = #{goodsId}
+    </update>
+
+    <delete id="deleteById">
+        delete from t_goods where id in (${ids})
+   </delete>
+    <delete id="delGoodsOfCoupon">
+        delete from t_ucoupon
+        where coupon_id  in (select c.id
+                             from t_goods g, t_coupon c
+                             where g.id = c.goods_id and g.id  in (${ids}));
+    </delete>
+    <delete id="delCouponOfGoods">
+        delete from t_coupon where goods_id  in (${ids});
+    </delete>
+
+    <select id="getAllGoods" resultType="com.lry.store.domain.Goods">
+        select * from t_goods
+        where id != 1
+            order by update_time desc
+            limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="getGoodsById" resultType="com.lry.store.domain.Goods">
+        select id,shop_id,name,img,price,sale_room,description,is_status,category_id
+            from t_goods
+            where id = #{id}
+    </select>
+
+    <select id="getShopGoodsById" resultType="com.lry.store.domain.Goods">
+        select id,name,img,price,is_status,update_time
+        from t_goods
+        where  id != 1 and shop_id = #{shopId}
+        order by update_time desc limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="getShopGoodsCountByShopId" resultType="java.lang.Integer">
+        select count(*) from t_goods where id != 1 and shop_id = #{shopId}
+    </select>
+
+    <select id="getShopGoodsByIdAndCategoryId" resultType="com.lry.store.domain.Goods">
+        select id,name,img,price,is_status,update_time
+        from t_goods
+        where id != 1 and shop_id = #{shopId} and category_id = #{categoryId}
+        order by update_time desc limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="getGoodsIdByName" resultType="java.lang.String">
+        select id from t_goods where shop_id = #{shopId} and name like "%"#{name}"%"
+    </select>
+    <select id="getGoodsBySeral" resultType="com.lry.store.domain.Goods">
+        select id,name,img,price,description
+        from t_goods
+        where is_status = 1 and id != 1
+        order by ${seral} desc limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getGoodsCommentBySeral" resultType="com.lry.store.domain.Goods">
+        select distinct(g.id),g.name,g.img,price,description
+        from t_goods g, t_comment c
+        where g.id = c.goods_id and is_status = 1
+            limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getGoodsCollectBySeral" resultType="com.lry.store.domain.Goods">
+        select distinct(g.id),g.name,g.img,price,description
+        from t_goods g, t_collect c
+        where g.id = c.goods_id and g.id != 1 and is_status = 1
+        limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getCountGoods" resultType="java.lang.Integer">
+        select count(id) from t_goods where is_status = 1
+    </select>
+    <select id="getGoodsByCategory" resultType="com.lry.store.domain.Goods">
+        select id,name,img,price
+        from t_goods
+        where is_status = 1 and id != 1 and category_id like #{categoryId}
+        order by update_time limit 0,10
+    </select>
+    <select id="getGoodsLikeName" resultType="com.lry.store.domain.Goods">
+        select id,name,img,price
+        from t_goods
+        where is_status = 1 and id != 1 and name like #{searchName}
+        order by update_time
+    </select>
+    <select id="getGoodsByShopId" resultType="com.lry.store.domain.Goods">
+        select id,name from t_goods where id != 1 and shop_id = #{shopId}
+    </select>
+
+
+</mapper>

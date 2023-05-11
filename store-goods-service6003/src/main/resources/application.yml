@@ -1,0 +1,74 @@
+server:
+  port: 6003
+
+spring:
+  application:
+    name: store-goods-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+#    alibaba:
+#      seata:
+#        tx-service-group: lry_group
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/store
+      username: root
+      password: renyihan21
+
+feign:
+  hystrix:
+    enabled: true
+
+#设置feign客户端超时时间
+ribbon:
+  #  建立连接所用时间
+  ReadTimeout: 5000
+  #  建立连接后从服务器读取到可用资源的时间
+  ConnectTimeout: 5000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    #    开启mp的输出日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      #      配置统一的前缀
+      table-prefix: t_
+
+sfs:
+  nacos:
+    server-addr: 127.0.0.1:8848
+    namespace: public
+    group: lry_group
+seata:
+  enabled: true
+  application-id : ${spring.application.name}
+  tx-service-group: default_tx_group
+  use-jdk-proxy: true
+  enable-auto-data-source-proxy: true
+  registry:
+    type: nacos
+    nacos:
+      application: seata-tc-server
+      server-addr: ${sfs.nacos.server-addr}
+      namespace: ${sfs.nacos.namespace}
+      group: ${sfs.nacos.group}
+  config:
+    type: nacos
+    nacos:
+      server-addr: ${sfs.nacos.server-addr}
+      namespace: ${sfs.nacos.namespace}
+      group: ${sfs.nacos.group}
+  service:
+    vgroupMapping:
+      default_tx_group: default

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.ShopMapper">
+    <insert id="createShop">
+        insert into t_shop values (#{id},#{sole},#{name},#{pwd});
+    </insert>
+    <insert id="createShopDetail">
+        insert into t_shopdetail(id,shop_id,tel,img,create_time) values (#{id},#{shopId},#{tel},#{img},#{createTime});
+    </insert>
+
+    <update id="updateStatus">
+        update t_shopDetail set is_status = !is_status where shop_id = #{id}
+    </update>
+    <update id="updateShop">
+        update t_shop s,t_shopdetail sd
+        set tel = #{tel}, name = #{name}, update_time = now(), img = #{img}
+        where s.id = sd.shop_id and s.id = #{id};
+    </update>
+    <update id="updatePwd">
+        update t_shop
+        set pwd = #{newPwd}
+        where id = #{id} and pwd = #{oldPwd}
+    </update>
+
+    <select id="getCounts" resultType="java.lang.Integer">
+        select count(*) from t_shop where name like "%"#{searchName}"%"
+    </select>
+    <select id="getAllByLikes" resultType="com.lry.store.domain.Shop">
+        select s.id,sole,name,tel,is_status,update_time
+        from t_shop s, t_shopdetail sd
+        where s.id = sd.shop_id and s.name like "%"#{searchName}"%"
+        order by sd.update_time desc limit #{currentPage},#{number}
+    </select>
+    <select id="getOnlyInfoById" resultType="com.lry.store.domain.Shop">
+        select s.id,sole,name,tel,img,is_status,create_time,update_time
+        from t_shop s, t_shopdetail sd
+        where s.id = sd.shop_id and s.id = #{id}
+    </select>
+    <select id="getImg" resultType="java.lang.String">
+        select img
+        from t_shop s, t_shopdetail sd
+        where s.id = sd.shop_id and (s.name = #{news} or s.sole = #{news})
+    </select>
+    <select id="getShopInfoByName" resultType="com.lry.store.domain.Shop">
+        select name
+        from t_shop s, t_shopdetail sd
+        where s.id = sd.shop_id and name = #{name} and s.id != #{id}
+    </select>
+</mapper>

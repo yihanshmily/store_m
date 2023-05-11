@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.CommentMapper">
+    <insert id="createComment">
+        insert into t_comment (id,goods_id,user_id,shop_id,order_id,content,score,img,is_head,head_commentId)
+            values (#{id},#{goodsId},#{userId},#{shopId},#{orderId},#{content},#{score},#{img},#{isHead},#{headCommentId})
+    </insert>
+    <update id="updateGive">
+        update t_comment set give_like = #{giveLike}  where id = #{id}
+    </update>
+    <delete id="deleteCommentByGoodsId">
+        delete from t_comment where goods_id in (${ids})
+    </delete>
+    <select id="getSonComments" resultType="java.lang.Integer">
+        select count(*) from t_comment where head_commentId = #{commentId} and goods_id = #{goodsId}
+    </select>
+
+    <select id="getCommentAboutHead" resultType="com.lry.store.domain.Comment">
+        select id,user_id,shop_id,content,img,score,give_like,create_time
+        from t_comment
+        where goods_id = #{goodsId} and is_head = #{number}
+    </select>
+    <select id="getCommentByGoodsId" resultType="java.lang.Integer">
+        select count(*) from t_comment where goods_id in (${ids})
+    </select>
+    <select id="getCommentAboutNotHead" resultType="com.lry.store.domain.Comment">
+        select id,user_id,shop_id,content,img,score,give_like,create_time
+        from t_comment
+        where goods_id = #{goodsId} and is_head = #{number} and head_commentId = #{headId}
+    </select>
+    <select id="getCommentByOrderId" resultType="com.lry.store.domain.Comment">
+        select score
+        from t_comment
+        where is_head = 1 and order_id = #{orderId}
+    </select>
+</mapper>

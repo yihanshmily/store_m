@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.AddressMapper">
+    <insert id="createAddress">
+        insert into t_address(id,user_id,name,tel,address_info,is_default)
+        values (#{id},#{userId},#{name},#{tel},#{addressInfo},#{isDefault})
+    </insert>
+    <update id="cloDefault">
+        update t_address set is_default = 0 where is_default = 1 and user_id = #{userId};
+    </update>
+    <update id="updateAddress">
+        update t_address set name = #{name},tel = #{tel},address_info = #{addressInfo},is_default = #{isDefault}
+            where id = #{id}
+    </update>
+    <delete id="deleteAddress">
+        delete from t_address where id = #{id}
+    </delete>
+
+    <select id="getAddressOfUserId" resultType="com.lry.store.domain.Address">
+        select id,address_info,is_default,name,tel
+        from t_address
+        where user_id = #{userId}
+        order by update_time
+    </select>
+    <select id="getOne" resultType="com.lry.store.domain.Address">
+        select id,name,tel,address_info,is_default from t_address where id = #{id}
+    </select>
+</mapper>

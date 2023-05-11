@@ -1,0 +1,34 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: store-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
+      routes:
+        - id: login_service  #路由的id，无固定规则但要求统一，建议配合服务名
+          uri: lb://store-login-service #根据服务名进行匹配(lb为LoadBalanced负载均衡)
+          predicates:
+            - Path=/login/**,/file/**    #断言，路径相匹配的进行路由
+
+        - id: identity_service  #路由的id，无固定规则但要求统一，建议配合服务名
+          uri: lb://store-identity-service #根据服务名进行匹配(lb为LoadBalanced负载均衡)
+          predicates:
+            - Path=/identity/**,/collect/**,/wallet/**,/address/** #断言，路径相匹配的进行路由
+
+        - id: goods_service  #路由的id，无固定规则但要求统一，建议配合服务名
+          uri: lb://store-goods-service #根据服务名进行匹配(lb为LoadBalanced负载均衡)
+          predicates:
+            - Path=/goods/**,/repertory/** ,/foot/**,/coupon/** #断言，路径相匹配的进行路由
+
+        - id: order_service  #路由的id，无固定规则但要求统一，建议配合服务名
+          uri: lb://store-order-service #根据服务名进行匹配(lb为LoadBalanced负载均衡)
+          predicates:
+            - Path=/order/**,/shoping/**  #断言，路径相匹配的进行路由

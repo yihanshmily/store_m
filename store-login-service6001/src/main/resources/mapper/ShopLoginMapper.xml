@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lry.store.mapper.ShopLoginMapper">
+
+    <select id="shopLogin" resultType="com.lry.store.domain.Shop">
+        select distinct s.id,sole,name,is_status,img
+        from t_shop s, t_shopdetail sd
+        where name = #{name} and pwd = #{pwd} and s.id = sd.shop_id
+    </select>
+</mapper>
