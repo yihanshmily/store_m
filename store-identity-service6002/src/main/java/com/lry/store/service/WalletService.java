@@ -12,4 +12,6 @@ public interface WalletService {
     String deleteWallet(String userId);
 
     String deleteWalletDetails(String ids);
+
+    String createWalletOfUser(String userId);
 }

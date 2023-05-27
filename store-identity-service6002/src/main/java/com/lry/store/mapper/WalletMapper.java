@@ -24,4 +24,6 @@ public interface WalletMapper {
     Integer deleteWallet(@Param("userId") String userId);
 
     Integer deleteWalletDetails(@Param("ids") String ids);
+
+    Integer createWalletOfUser(@Param("id") String id, @Param("userId") String userId);
 }

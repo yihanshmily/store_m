@@ -8,6 +8,9 @@
         insert into t_walletDetail(id,user_id,goods_id,money,is_add,is_dec)
         values (#{id},#{userId},#{goodsId},#{money},#{isAdd},#{isDec})
     </insert>
+    <insert id="createWalletOfUser">
+        insert into t_wallet(id,user_id) values (#{id},#{userId})
+    </insert>
     <update id="addWallet">
         update t_wallet set wallet = wallet + #{money} where user_id = #{userId};
     </update>

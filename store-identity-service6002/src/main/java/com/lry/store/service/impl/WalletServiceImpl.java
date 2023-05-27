@@ -8,6 +8,7 @@ import com.lry.store.service.WalletService;
 import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,6 +51,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String addWallet(String userId,Double money) {
         walletMapper.addWallet(userId, money);
         String goodsId = "1";
@@ -61,6 +63,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String desWallet(String userId,String goodsId, Double money) {
         walletMapper.desWallet(userId, money);
         WalletDetail walletDetail = returnWalletDetail(userId, goodsId, money);
@@ -71,14 +74,24 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteWallet(String userId) {
         Integer integer = walletMapper.deleteWallet(userId);
         return R.returnString(integer);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteWalletDetails(String ids) {
         Integer integer = walletMapper.deleteWalletDetails(ids);
+        return R.returnString(integer);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String createWalletOfUser(String userId) {
+        String id = SnowflakeIdWorker.getNextId();
+        Integer integer = walletMapper.createWalletOfUser(id, userId);
         return R.returnString(integer);
     }
 

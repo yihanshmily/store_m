@@ -5,6 +5,7 @@ import com.lry.store.dto.PageDto;
 import com.lry.store.mapper.ManagerMapper;
 import com.lry.store.service.ManagerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(String id) {
         managerMapper.updateStatus(id);
     }

@@ -9,6 +9,7 @@ import com.lry.store.service.CollectService;
 import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -39,6 +40,7 @@ public class CollectServiceImpl implements CollectService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateCollectOfUserGoods(String userId, String goodsId,String shopId, Boolean isCollect) {
         Collect collect = new Collect(SnowflakeIdWorker.getNextId(),userId,goodsId,shopId);
         if (isCollect){
@@ -75,12 +77,14 @@ public class CollectServiceImpl implements CollectService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String delAllCollect(String userId) {
         Integer integer = collectMapper.delAllCollect(userId);
         return R.returnString(integer);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String delGoodsByIds(String ids) {
         Integer integer = collectMapper.delGoodsByIds(ids);
         return R.returnString(integer);

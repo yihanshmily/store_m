@@ -12,10 +12,12 @@ import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.StampedLock;
 
 @Service
 
@@ -48,6 +50,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createComment(Comment comment) {
         comment.setId(SnowflakeIdWorker.getNextId());
         Integer integer = commentMapper.createComment(comment);
@@ -59,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateGive(String id,Integer giveLike) {
         Integer integer = commentMapper.updateGive(id,giveLike);
         return R.returnString(integer);

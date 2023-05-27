@@ -38,4 +38,7 @@
         from t_user u , t_userdetail ud
         where u.id = ud.user_id and (u.name = #{news} or u.sole = #{news})
     </select>
+    <select id="userIsNull" resultType="java.lang.Integer">
+        select count(id) from t_user where name = #{userName}
+    </select>
 </mapper>

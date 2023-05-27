@@ -29,6 +29,12 @@ public class UserController {
         return userService.updateInfo(user);
     }
 
+//    根据用户名查询此用户是否存在
+    @GetMapping("/isNull/{userName}")
+    public String userIsNull(@PathVariable("userName") String userName){
+        return userService.userIsNull(userName);
+    }
+
 //    根据userId获取用户信息
     @GetMapping("/{userId}")
     public String getUserId(@PathVariable("userId") String userId){

@@ -7,6 +7,7 @@ import com.lry.store.mapper.RepertoryMapper;
 import com.lry.store.service.RepertoryService;
 import com.lry.store.utils.R;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -61,6 +62,7 @@ public class RepertoryServiceImpl implements RepertoryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String addRepertorySum(String shopId, String id, Integer addSum) {
         Integer integer = repertoryMapper.addRepertorySum(shopId, id, addSum);
        return returnString(integer);
@@ -73,6 +75,7 @@ public class RepertoryServiceImpl implements RepertoryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String desRepertory(String goodsId, Integer number) {
         Integer integer = repertoryMapper.desRepertory(goodsId, number);
         return R.returnString(integer);

@@ -6,6 +6,7 @@ import com.lry.store.service.AddressService;
 import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createAddress(Address address, String userId) {
         if (address.getIsDefault()){
             addressMapper.cloDefault(userId);
@@ -36,6 +38,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateAddress(Address address, String userId) {
         if (address.getIsDefault()){
             addressMapper.cloDefault(userId);
@@ -45,6 +48,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteAddress(String id) {
         Integer integer = addressMapper.deleteAddress(id);
         return R.returnString(integer);

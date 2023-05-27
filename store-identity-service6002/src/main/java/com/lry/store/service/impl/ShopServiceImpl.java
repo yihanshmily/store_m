@@ -8,6 +8,7 @@ import com.lry.store.service.CallGoodsService;
 import com.lry.store.service.ShopService;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(String id) {
         shopMapper.updateStatus(id);
     }
@@ -65,6 +67,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
 //    @GlobalTransactional(name = "shop_add",rollbackFor = Exception.class)
     public Integer createShop(Shop shop) {
         String shopId = SnowflakeIdWorker.getNextId();
@@ -85,12 +88,14 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateShop(Shop shop) {
         shop.setUpdateTime(new Date());
         return shopMapper.updateShop(shop);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updatePwd(String id, String oldPwd, String newPwd) {
        return shopMapper.updatePwd(id,oldPwd,newPwd);
     }

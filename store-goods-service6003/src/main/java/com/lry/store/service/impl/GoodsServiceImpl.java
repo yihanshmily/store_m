@@ -14,10 +14,13 @@ import com.lry.store.service.GoodsService;
 import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.StampedLock;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -43,6 +46,7 @@ public class GoodsServiceImpl implements GoodsService {
 //    新增商品
     @Override
 //    @GlobalTransactional(name = "goods-add",rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void addGoods(Goods goods) {
         String snowId = SnowflakeIdWorker.getNextId();
         goods.setId(snowId);
@@ -141,6 +145,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
 //    @GlobalTransactional(name = "goods_deleteById",rollbackFor = Exception.class)
     public String deleteById(String ids) {
         ids = ids.substring(0, ids.length() - 1);
@@ -171,6 +176,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateGoodsById(Goods goods) {
         Integer integer = goodsMapper.updateGoods(goods);
         return returnString(integer);
@@ -238,6 +244,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateGoodsSaleRoom(String goodsId, Integer saleRoom) {
         Integer integer = goodsMapper.updateGoodsSaleRoom(goodsId, saleRoom);
         return R.returnString(integer);

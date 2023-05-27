@@ -16,4 +16,6 @@ public interface UserService {
     String updateInfo(User user);
 
     String updatePwd(String id, String oldPwd, String newPwd);
+
+    String userIsNull(String userName);
 }

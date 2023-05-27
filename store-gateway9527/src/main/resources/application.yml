@@ -16,7 +16,7 @@ spring:
         - id: login_service  #路由的id，无固定规则但要求统一，建议配合服务名
           uri: lb://store-login-service #根据服务名进行匹配(lb为LoadBalanced负载均衡)
           predicates:
-            - Path=/login/**,/file/**    #断言，路径相匹配的进行路由
+            - Path=/login/**,/file/**,/register/**    #断言，路径相匹配的进行路由
 
         - id: identity_service  #路由的id，无固定规则但要求统一，建议配合服务名
           uri: lb://store-identity-service #根据服务名进行匹配(lb为LoadBalanced负载均衡)

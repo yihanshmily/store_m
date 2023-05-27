@@ -45,6 +45,12 @@ public class WalletController {
     * 供其他服务调用
     * */
 
+    //    创建用户的钱包
+    @PostMapping("/{userId}")
+    public String createWalletOfUser(@PathVariable("userId") String userId){
+        return walletService.createWalletOfUser(userId);
+    }
+
 //    根据商品删除消费记录
     @DeleteMapping("/goodsOfWallet/{ids}")
     public String deleteWalletDetails(@PathVariable("ids") String ids){

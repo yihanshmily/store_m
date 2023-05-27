@@ -8,8 +8,7 @@
         insert into t_foot values (#{id},#{userId},#{goodsId},#{createTime},#{updateTime})
     </insert>
     <delete id="deleteFootByUserId">
-        delete from t_foot
-        where user_id = #{userId}
+        delete from t_foot where user_id = #{userId}
     </delete>
     <delete id="delGoodsOfFoot">
         delete from t_foot where goods_id in (${ids})

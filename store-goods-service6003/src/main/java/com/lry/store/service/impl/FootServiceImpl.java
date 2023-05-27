@@ -5,6 +5,7 @@ import com.lry.store.mapper.FootMapper;
 import com.lry.store.service.FootService;
 import com.lry.store.utils.R;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Set;
@@ -25,13 +26,15 @@ public class FootServiceImpl implements FootService {
         return R.success(footDtoSet);
     }
 
-//    根据商品删除足迹
-    public String delGoodsOfFoot(String ids){
+    //    根据商品删除足迹
+    @Transactional(rollbackFor = Exception.class)
+    public String delGoodsOfFoot(String ids) {
         Integer integer = footMapper.delGoodsOfFoot(ids);
         return R.returnString(integer);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String delFootByUserId(String userId) {
         footMapper.deleteFootByUserId(userId);
         return R.success("成功");

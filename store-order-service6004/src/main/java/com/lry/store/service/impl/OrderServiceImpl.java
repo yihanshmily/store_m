@@ -12,6 +12,7 @@ import com.lry.store.service.OrderService;
 import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -59,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String putOrderOfShop(String id) {
         Integer integer = orderMapper.putOrderOfShop(id);
         return R.returnString(integer);
@@ -82,6 +84,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createOrder(Order order) {
         order.setSole(SnowflakeIdWorker.getNextId().substring(12,18));
         order.setId(SnowflakeIdWorker.getNextId());
@@ -132,18 +135,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateOrderStatus(String id, String status) {
         Integer integer = orderMapper.updateOrderStatus(id, status);
         return R.returnString(integer);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String putOrderOfUser(String id) {
         Integer integer = orderMapper.putOrderOfUser(id);
         return R.returnString(integer);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String delGoodsOfOrder(String ids) {
         Integer integer = orderMapper.delGoodsOfOrder(ids);
         return R.returnString(integer);

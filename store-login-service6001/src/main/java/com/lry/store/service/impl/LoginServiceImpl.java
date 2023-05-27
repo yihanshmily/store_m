@@ -31,7 +31,7 @@ public class LoginServiceImpl implements LoginService {
     public User userLogin(String name, String pwd) {
         User user = userLoginMapper.userLogin(name, pwd);
 //        清空指定用户的消费记录
-        callIdentityService.deleteWallet(user.getId());
+//        callIdentityService.deleteWallet(user.getId());
         return user;
     }
 

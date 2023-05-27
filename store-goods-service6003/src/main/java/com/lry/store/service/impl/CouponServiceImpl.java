@@ -9,6 +9,7 @@ import com.lry.store.service.CouponService;
 import com.lry.store.utils.R;
 import com.lry.store.utils.SnowflakeIdWorker;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,6 +46,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createCoupon(Coupon coupon) {
         coupon.setId(SnowflakeIdWorker.getNextId());
         Integer integer = couponMapper.createCoupon(coupon);
@@ -57,7 +59,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public String updateCoupon(Coupon coupon) {
+    @Transactional(rollbackFor = Exception.class)
+    public synchronized String updateCoupon(Coupon coupon) {
         Integer integer = couponMapper.updateCoupon(coupon);
         return returnString(integer);
     }
@@ -73,12 +76,14 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteCoupon(String id) {
         Integer integer = couponMapper.deleteCoupon(id);
         return returnString(integer);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String userAddCoupon(UCoupon ucoupon) {
         ucoupon.setId(SnowflakeIdWorker.getNextId());
         Integer integer = couponMapper.addCoupon(ucoupon);
@@ -86,7 +91,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public String getUserCoupon(String userId) {
+    public synchronized String getUserCoupon(String userId) {
         List<CouponDto> couponDtoList = couponMapper.getUserCoupon(userId);
         for (CouponDto couponDto : couponDtoList) {
             String[] split = couponDto.getGoodsImg().split(",");
@@ -106,6 +111,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateGetCoupon(String userId, String couponId) {
         Integer integer = couponMapper.updateGetCoupon(userId, couponId);
         return R.returnString(integer);

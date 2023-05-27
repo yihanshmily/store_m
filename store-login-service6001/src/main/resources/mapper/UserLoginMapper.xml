@@ -7,6 +7,6 @@
     <select id="userLogin" resultType="com.lry.store.domain.User">
 select distinct u.id,name,is_status,img
 from t_user u,t_userDetail ud
-where (name = #{name} or sole = #{name}) and pwd = #{pwd} and u.id = ud.id
+where (name = #{name} or sole = #{name}) and pwd = #{pwd} and u.id = ud.user_id
     </select>
 </mapper>

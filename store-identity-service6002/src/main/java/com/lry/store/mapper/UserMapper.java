@@ -25,4 +25,5 @@ public interface UserMapper {
 
     Integer updatePwd(@Param("id") String id, @Param("oldPwd") String oldPwd, @Param("newPwd") String newPwd);
 
+    Integer userIsNull(@Param("userName") String userName);
 }

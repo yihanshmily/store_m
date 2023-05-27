@@ -7,6 +7,7 @@ import com.lry.store.mapper.UserMapper;
 import com.lry.store.service.UserService;
 import com.lry.store.utils.R;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(String id) {
         userMapper.updateStatus(id);
     }
@@ -44,15 +46,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateInfo(User user) {
         int sum = userMapper.updateInfo(user);
         return returnInfo(sum);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updatePwd(String id, String oldPwd, String newPwd) {
         Integer integer = userMapper.updatePwd(id, oldPwd, newPwd);
         return returnInfo(integer);
+    }
+
+    @Override
+    public String userIsNull(String userName) {
+        Integer integer = userMapper.userIsNull(userName);
+        if(integer == 0){
+            return R.success("无");
+        }else {
+            return R.error("有");
+        }
     }
 
     public String returnInfo(Integer sum){
